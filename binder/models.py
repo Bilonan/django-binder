@@ -248,7 +248,7 @@ class FieldFilter(object):
 
 		field_filter.check_qualifier(qualifier)
 		qualifier, cleaned_value = field_filter.clean_qualifier(qualifier, value)
-		
+
 		if 0 <= i < len(qualifiers):
 			qualifiers[i] = qualifier
 
