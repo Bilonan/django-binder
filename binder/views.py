@@ -1102,7 +1102,7 @@ class ModelView(View):
 			if partial:
 				# NOTE: This creates a subquery; try to avoid this!
 				qs = annotate(self.model.objects.all(), request, annotations)
-				qs = qs.filter(self._filter_field(field_name, qualifier, value, invert, request, {
+				qs = qs.filter(self._filter_field(field_name, qualifiers, value, invert, request, {
 					rel_[len(rel) + 1:]: annotations
 					for rel_, annotations in include_annotations.items()
 					if rel_ == rel or rel_.startswith(rel + '.')

@@ -248,6 +248,9 @@ class FieldFilter(object):
 
 		field_filter.check_qualifier(qualifier)
 		qualifier, cleaned_value = field_filter.clean_qualifier(qualifier, value)
+		
+		if 0 <= i < len(qualifiers):
+			qualifiers[i] = qualifier
 
 		suffix = ''.join('__' + qualifier for qualifier in qualifiers)
 		if invert:
@@ -328,6 +331,7 @@ class DateTimeFieldFilter(FieldFilter):
 		else:
 			value_type = type(cleaned_value)
 
+		# [TODO] Support for chained qualifiers is added, still needed for backwards compat
 		if issubclass(value_type, date) and not issubclass(value_type, datetime):
 			if qualifier is None:
 				qualifier = 'date'
