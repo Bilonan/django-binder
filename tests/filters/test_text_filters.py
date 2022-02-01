@@ -36,12 +36,6 @@ class TextFiltersTest(TestCase):
 		result = jsonloads(response.content)
 		self.assertEqual(0, len(result['data']))
 
-		response = self.client.get('/caretaker/', data={'.name': 'Śtefan'})
-
-		self.assertEqual(response.status_code, 200)
-
-		result = jsonloads(response.content)
-		self.assertEqual(0, len(result['data']))
 
 	# [TODO] unaccent needs to be installed as an extension on postgres to make it work
 	# def test_text_filter_unaccent_chained_qualifier_match(self):
