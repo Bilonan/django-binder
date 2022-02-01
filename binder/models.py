@@ -236,7 +236,7 @@ class FieldFilter(object):
 
 			field = field_cls()
 			field.model = self.field.model
-			field.name = self.name + ':' + chain_qualifier
+			field.name = self.field.name + ':' + chain_qualifier
 
 			field_filter_cls = self.get_field_filter(field_cls)
 			field_filter = field_filter_cls(field)
