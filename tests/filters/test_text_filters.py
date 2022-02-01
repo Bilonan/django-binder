@@ -36,13 +36,6 @@ class TextFiltersTest(TestCase):
 		result = jsonloads(response.content)
 		self.assertEqual(0, len(result['data']))
 
-		response = self.client.get('/caretaker/', data={'.name': 'stefan'})
-
-		self.assertEqual(response.status_code, 200)
-
-		result = jsonloads(response.content)
-		self.assertEqual(0, len(result['data']))
-
 		response = self.client.get('/caretaker/', data={'.name': 'Śtefan'})
 
 		self.assertEqual(response.status_code, 200)
