@@ -1,14 +1,14 @@
+import unittest
+import os
 from django.test import TestCase, Client
 from binder.json import jsonloads
 from django.contrib.auth.models import User
-from django.contrib.postgres.operations import UnaccentExtension
 
 from ..testapp.models import Caretaker
 
 class TextFiltersTest(TestCase):
 	def setUp(self):
 		super().setUp()
-		UnaccentExtension()
 		u = User(username='testuser', is_active=True, is_superuser=True)
 		u.set_password('test')
 		u.save()
@@ -37,14 +37,17 @@ class TextFiltersTest(TestCase):
 		self.assertEqual(0, len(result['data']))
 
 
-	# [TODO] unaccent needs to be installed as an extension on postgres to make it work
-	# def test_text_filter_unaccent_chained_qualifier_match(self):
-	# 	response = self.client.get('/caretaker/', data={'.name:unaccent': 'Śtefan'})
+	@unittest.skipIf(
+		os.environ.get('BINDER_TEST_MYSQL', '0') != '0',
+		"Only available with PostgreSQL"
+	)
+	def test_text_filter_unaccent_chained_qualifier_match(self):
+		response = self.client.get('/caretaker/', data={'.name:unaccent': 'Śtefan'})
 
-	# 	self.assertEqual(response.status_code, 200)
+		self.assertEqual(response.status_code, 200)
 
-	# 	result = jsonloads(response.content)
-	# 	self.assertEqual(0, len(result['data']))
+		result = jsonloads(response.content)
+		self.assertEqual(0, len(result['data']))
 
 	def test_text_filter_iexact(self):
 		response = self.client.get('/caretaker/', data={'.name:iexact': 'stefan'})
@@ -73,7 +76,7 @@ class TextFiltersTest(TestCase):
 		result = jsonloads(response.content)
 		print(result)
 		self.assertEqual(0, len(result['data']))
-  
+
 		response = self.client.get('/caretaker/', data={'.name:contains': 'Stef'})
 
 		self.assertEqual(response.status_code, 200)
@@ -169,7 +172,7 @@ class TextFiltersTest(TestCase):
 		print(result)
 		self.assertEqual(1, len(result['data']))
 		self.assertEqual('Stefan', result['data'][0]['name'])
-  
+
 	def test_text_filter_endswith(self):
 		response = self.client.get('/caretaker/', data={'.name:endswith': 'efa'})
 
@@ -222,4 +225,4 @@ class TextFiltersTest(TestCase):
 		print(result)
 		self.assertEqual(1, len(result['data']))
 		self.assertEqual('Stefan', result['data'][0]['name'])
-	
+
